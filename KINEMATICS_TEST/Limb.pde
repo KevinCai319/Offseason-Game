@@ -49,13 +49,6 @@ public class Limb{
   protected void setEnd(){
     end = PVector.add(getLast().pos,getLast().jointLength);
   }
-  // get new angles
-  private void solve(Joint p_1, Joint p_2, PVector movement){
-      float theta2 = acos(movement.x*movement.x+
-                          movement.y*movement.y);
-                          //TODO: finish this;
-                          
-  }
     // Overall angle of arm, in degrees
   public double getAngle(){
     return CoolVector.getAngle(getFirst().pos,getLast().pos);

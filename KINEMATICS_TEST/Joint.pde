@@ -50,4 +50,29 @@ public class Joint{
     jointLength.x = cos(angle)*length;
     jointLength.y = sin(angle)*length;
   }
+  public void setRotate(float rotation){
+    angle = rotation;
+    jointLength.x = cos(angle)*length;
+    jointLength.y = sin(angle)*length;
+  }
+  // get new angles
+  public void solve(Joint other, PVector movement){
+      final double len2 = other.length;
+      double num1 =(Math.pow(movement.mag(),2)
+                          -Math.pow(len2,2)-Math.pow(length,2));
+      double den1 =(2*length*len2);
+      float t2 = acos((float)(num1/den1));
+      System.out.println((float) (t2*180/Math.PI));
+      double num = -movement.y*len2*sin(t2)+movement.x*(length+len2*cos(t2));
+      double den = movement.x*len2*sin(t2)+movement.y*(length+len2*cos(t2));
+      
+      setRotate((float) (num/den*180/Math.PI));
+      other.pos = PVector.add(pos,jointLength);
+      other.setRotate((float) (t2*180/Math.PI));
+  }
+  public void superSolve(Joint other){
+    solve(other, new PVector(mouseX-pos.x,mouseY-pos.y));
+  }
+  public void snapJoint(){
+  }
 }
