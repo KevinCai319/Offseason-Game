@@ -1,20 +1,27 @@
-ControllableEntity player = new ControllableEntity(new PVector(245, 50), new PVector(25, 60), 1);
-Ground ground = new Ground(400);
-Platform testingPlatform = new Platform(150, 350, 325);
+ControllableEntity player;
+Ground ground;
+Platform testingPlatform;
+Platform testingPlatform2;
 
 void setup(){
   size(500, 500);
+  player = new ControllableEntity(new PVector(245, 50), new PVector(25, 60), 0.25);
+  ground = new Ground(400);
+  testingPlatform = new Platform(150, 350, 325, true);
+  testingPlatform2 = new Platform(150, 350, 250, true);
 }
 
 void draw(){
   background(0);
   fill(255);
   stroke(255);
-  ground.drawGround();
+  ground.drawPlatform();
   player.drawCEntity();
   testingPlatform.drawPlatform();
-  player.checkGroundCollision(ground);
+  testingPlatform2.drawPlatform();
+  player.checkPlatformCollision(ground);
   player.checkPlatformCollision(testingPlatform);
+  player.checkPlatformCollision(testingPlatform2);
   player.checkGravity();
 
 }
@@ -27,4 +34,5 @@ void keyPressed(){
 
 void keyReleased(){
   player.checkStopSideMove();
+  player.checkStopDrop();
 }

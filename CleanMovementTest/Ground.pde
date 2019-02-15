@@ -1,12 +1,7 @@
-public class Ground{
-  
-  float yPosition;
-  
+public class Ground extends Platform{
+
   Ground(float yPosition){
-    this.yPosition = yPosition;
+    super(-100, width + 100, yPosition, false);
   }
-  
-  public void drawGround(){
-    line(0, yPosition, width, yPosition);
-  }
+
 }
