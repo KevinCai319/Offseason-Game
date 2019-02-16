@@ -1,3 +1,3 @@
-public interface TriggerArea{
-  
+public interface TriggerArea {
+
 }

@@ -1,4 +1,5 @@
 public class GameLayer {
+    
   private ArrayList<GameObject> objects = new ArrayList<GameObject>();
   PVector translation = new PVector(0,0);
 
