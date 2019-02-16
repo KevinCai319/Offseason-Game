@@ -3,7 +3,7 @@ Ground ground;
 Platform testingPlatform;
 Platform testingPlatform2;
 
-void setup(){
+void setup() {
   size(500, 500);
   player = new ControllableEntity(new PVector(245, 50), new PVector(25, 60), 0.25);
   ground = new Ground(400);
@@ -11,7 +11,7 @@ void setup(){
   testingPlatform2 = new Platform(150, 350, 250, true);
 }
 
-void draw(){
+void draw() {
   background(0);
   fill(255);
   stroke(255);
@@ -26,13 +26,13 @@ void draw(){
 
 }
 
-void keyPressed(){
+void keyPressed() {
   player.enableJump();
   player.enableSideMove();
   player.enableDrop();
 }
 
-void keyReleased(){
+void keyReleased() {
   player.checkStopSideMove();
   player.checkStopDrop();
 }

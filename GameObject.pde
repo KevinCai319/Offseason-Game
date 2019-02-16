@@ -1,3 +1,5 @@
-public abstract class GameObject{
+public abstract class GameObject {
+
   abstract void update();
+  
 }
