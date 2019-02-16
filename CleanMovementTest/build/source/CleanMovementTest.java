@@ -19,7 +19,7 @@ Ground ground;
 Platform testingPlatform;
 Platform testingPlatform2;
 
-public void setup(){
+public void setup() {
   
   player = new ControllableEntity(new PVector(245, 50), new PVector(25, 60), 0.25f);
   ground = new Ground(400);
@@ -27,7 +27,7 @@ public void setup(){
   testingPlatform2 = new Platform(150, 350, 250, true);
 }
 
-public void draw(){
+public void draw() {
   background(0);
   fill(255);
   stroke(255);
@@ -42,67 +42,68 @@ public void draw(){
 
 }
 
-public void keyPressed(){
+public void keyPressed() {
   player.enableJump();
   player.enableSideMove();
   player.enableDrop();
 }
 
-public void keyReleased(){
+public void keyReleased() {
   player.checkStopSideMove();
   player.checkStopDrop();
 }
-public class ControllableEntity extends MovableEntity{
-  
-  public ControllableEntity(PVector entityLocation, PVector entityDimensions, float gravity){
+public class ControllableEntity extends MovableEntity {
+
+  public ControllableEntity(PVector entityLocation, PVector entityDimensions, float gravity) {
     super(entityLocation, entityDimensions, gravity);
   }
-  
-  public void enableJump(){
-    if(!super.inAir && key == ' '){
+
+  public void enableJump() {
+    if(!super.inAir && key == ' ') {
       super.entitySpeed.y = -7.5f;
       super.inAir = true;
     }
   }
-  
-  public void enableSideMove(){
-    if(key == 'a'){
+
+  public void enableSideMove() {
+    if(key == 'a') {
       super.entitySpeed.x = -6;
     }
-      
-    if(key == 'd'){
-      super.entitySpeed.x = 6; 
+
+    if(key == 'd') {
+      super.entitySpeed.x = 6;
     }
 
   }
-  
-  public void enableDrop(){
-     if(key == 's'){
+
+  public void enableDrop() {
+     if(key == 's') {
        super.dropping = true;
      }
   }
-  
-  public void checkStopSideMove(){
-    if(key == 'a' || key == 'd'){
+
+  public void checkStopSideMove() {
+    if(key == 'a' || key == 'd') {
       super.entitySpeed.x = 0;
     }
   }
-  
-  public void checkStopDrop(){
-    if(key == 's'){
+
+  public void checkStopDrop() {
+    if(key == 's') {
       super.dropping = false;
     }
   }
+  
 }
-public class Ground extends Platform{
+public class Ground extends Platform {
 
-  Ground(float yPosition){
+  Ground(float yPosition) {
     super(-100, width + 100, yPosition, false);
   }
 
 }
-public class MovableEntity{
-    
+public class MovableEntity {
+
   PVector entityLocation;
   PVector entityDimensions;
   PVector entitySpeed;
@@ -111,88 +112,89 @@ public class MovableEntity{
   boolean contactPlatform; // Used to determine if bottom of entity is on or below platform
   boolean moving;
   boolean dropping;
-  
-  MovableEntity(PVector entityLocation, PVector entityDimensions, float gravity){
+
+  MovableEntity(PVector entityLocation, PVector entityDimensions, float gravity) {
     this.entityLocation = entityLocation;
-    this.entityDimensions = entityDimensions;  
+    this.entityDimensions = entityDimensions;
     entitySpeed = new PVector(0,0);
     this.gravity = gravity;
   }
-  
-  public void drawCEntity(){
-    rect(entityLocation.x, entityLocation.y, entityDimensions.x, entityDimensions.y); 
+
+  public void drawCEntity() {
+    rect(entityLocation.x, entityLocation.y, entityDimensions.x, entityDimensions.y);
     entityLocation.add(entitySpeed);
   }
-  
-  public void checkGravity(){
-    if(!contactPlatform){
+
+  public void checkGravity() {
+    if(!contactPlatform) {
       entitySpeed.y += gravity;
     }
   }
-  
-  public void checkPlatformCollision(Platform specificPlatform){
+
+  public void checkPlatformCollision(Platform specificPlatform) {
     boolean abovePlatform = entityLocation.y + entityDimensions.y < specificPlatform.yPosition;
     boolean inXArea = entityLocation.x + entityDimensions.x > specificPlatform.xLeft && entityLocation.x < specificPlatform.xRight;
-    
-    if(specificPlatform.droppable){
-      if(abovePlatform && inXArea && !dropping){
+
+    if(specificPlatform.droppable) {
+      if(abovePlatform && inXArea && !dropping) {
         specificPlatform.platformEnabled = true;
       }
-    }else{
-      if(abovePlatform && inXArea){
+    } else {
+      if(abovePlatform && inXArea) {
         specificPlatform.platformEnabled = true;
       }
     }
-    
-    if(specificPlatform.platformEnabled){
-      if(!abovePlatform){
+
+    if(specificPlatform.platformEnabled) {
+      if(!abovePlatform) {
         entityLocation.y = specificPlatform.yPosition - entityDimensions.y;
         entitySpeed.y = 0;
-        
+
         contactPlatform = true;
         inAir = false;
-      }else{
+      } else {
         contactPlatform = false;
-      }        
-      
-      if(specificPlatform.droppable){
-        if(!inXArea || dropping){
+      }
+
+      if(specificPlatform.droppable) {
+        if(!inXArea || dropping) {
           specificPlatform.platformEnabled = false;
           contactPlatform = false;
           inAir = true;
         }
-      }else{
-        if(!inXArea){
+      } else {
+        if(!inXArea) {
           specificPlatform.platformEnabled = false;
           contactPlatform = false;
           inAir = true;
         }
       }
-    }else{
+    } else {
       contactPlatform = false;
     }
   }
 
 }
-public class Platform{
-  
+public class Platform {
+
   float xLeft;
   float xRight;
   float yPosition;
   boolean platformEnabled;
   boolean droppable;
-  
-  public Platform(float xLeft, float xRight, float yPosition, boolean droppable){
+
+  public Platform(float xLeft, float xRight, float yPosition, boolean droppable) {
     this.xLeft = xLeft;
     this.xRight = xRight;
     this.yPosition = yPosition;
     this.droppable = droppable;
     platformEnabled = false;
   }
-  
-  public void drawPlatform(){
+
+  public void drawPlatform() {
     line(xLeft, yPosition, xRight, yPosition);
   }
+  
 }
   public void settings() {  size(500, 500); }
   static public void main(String[] passedArgs) {
