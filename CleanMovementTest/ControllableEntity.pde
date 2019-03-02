@@ -1,9 +1,7 @@
 public class ControllableEntity extends MovableEntity{
 
   public ControllableEntity(PVector entityLocation, PVector entityDimensions, float gravity, float setSideSpeed, float setJumpForce){
-    super(entityLocation, entityDimensions, gravity);
-    super.setSideSpeed = setSideSpeed;
-    super.setJumpForce = setJumpForce;
+    super(entityLocation, entityDimensions, gravity, setSideSpeed, setJumpForce);
   }
   
   // Enables all movement from key presses.
