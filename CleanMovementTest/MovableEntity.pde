@@ -4,16 +4,20 @@ public class MovableEntity{
   PVector entityDimensions;
   PVector entitySpeed;
   float gravity; // Gravity speed
+  float setSideSpeed;
+  float setJumpForce;
   boolean inAir; // To see if entity is jumping
   boolean contactPlatform; // Used to determine if bottom of entity is on or below platform
   boolean moving; // Currently unused.
   boolean dropping; // Used only for dropping through platforms. Set to true by key input.
   
-  MovableEntity(PVector entityLocation, PVector entityDimensions, float gravity){
+  MovableEntity(PVector entityLocation, PVector entityDimensions, float gravity, float setSideSpeed, float setJumpForce){
     this.entityLocation = entityLocation;
     this.entityDimensions = entityDimensions;  
     entitySpeed = new PVector(0,0);
     this.gravity = gravity;
+    this.setSideSpeed = setSideSpeed;
+    this.setJumpForce = setJumpForce;
   }
   
   // Updates entity position and redraws visual position
@@ -69,6 +73,31 @@ public class MovableEntity{
     }else{
       contactPlatform = false;
     }
+  }
+  
+  public void moveRight(){
+    entitySpeed.x = setSideSpeed;
+  }
+  
+  public void moveLeft(){
+    entitySpeed.x = -setSideSpeed;
+  }
+  
+  public void stopSideMove(){
+    entitySpeed.x = 0;
+  }
+  
+  public void jump(){
+    entitySpeed.y = -setJumpForce;
+    inAir = true;
+  }
+  
+  public void drop(){
+    dropping = true;
+  }
+  
+  public void stopDrop(){
+    dropping = false;
   }
 
 }

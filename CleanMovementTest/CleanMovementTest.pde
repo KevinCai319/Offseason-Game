@@ -23,7 +23,6 @@ void draw(){
   player.updateCEntity();
 
   player.checkPlatformCollision(ground);
-  
   //Checks collision for all platforms
   for(Platform platform: testingPlatform){
     platform.drawPlatform();
