@@ -9,10 +9,6 @@ public class ControllableEntity extends MovableEntity{
     enableJump();
     enableSideMove();
     enableDrop();
-  }
-  
-  // Stops certain movement when certain keys are released.
-  public void stopMovement(){
     checkStopSideMove();
     checkStopDrop();
   }
@@ -25,7 +21,7 @@ public class ControllableEntity extends MovableEntity{
   // Sets x speed to 0 if both left and right are pressed, otherwise sets x speed based on which key is pressed.
   public void enableSideMove(){
     if(keys.getState('a') == KeyState.HELD && keys.getState('d') == KeyState.HELD){
-      super.stopDrop();
+      super.stopSideMove();
     }else{
       if(keys.getState('a') == KeyState.HELD) super.moveLeft();    
       if(keys.getState('d') == KeyState.HELD) super.moveRight(); 

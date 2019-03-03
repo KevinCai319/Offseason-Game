@@ -65,33 +65,46 @@ public class MovableEntity{
     }
   }
   
-  // Uses sweptAABB
-  public void checkPlatformCollision(Platform specificPlatform){
+  public boolean checkPlatformCollision(Platform specificPlatform){
     boolean inXArea = entityLocation.x < specificPlatform.xRight && entityLocation.x + entityDimensions.x> specificPlatform.xLeft; 
     if(specificPlatform.droppable){
-      if(inXArea && !dropping){
+      if((inXArea && !dropping)){
         float collisiontime = platformCollisionTime(specificPlatform);
         entitySpeed.y *= collisiontime;
         if(collisiontime == 0){
-          contactPlatform = true;
-          inAir = false;
+          return true;
         }
       }else{
-        contactPlatform = false;
-        inAir = true;
+        return false;
       }
     }else{
       if(inXArea){
         float collisiontime = platformCollisionTime(specificPlatform);
         entitySpeed.y *= collisiontime;
         if(collisiontime == 0){
-          contactPlatform = true;
-          inAir = false;
+          return true;
         }
       }else{
-        contactPlatform = false;
-        inAir = true;
+        return false;
       }
+    }
+    return false;
+  }
+  
+  // Uses sweptAABB
+  public void checkAllPlatformCollision(ArrayList<Platform> platforms){
+    boolean touchPlatform = false;
+    for(Platform platform: platforms){
+      if(checkPlatformCollision(platform)){
+        touchPlatform = true;
+      }
+    }
+    if(touchPlatform){
+      contactPlatform = true;
+      inAir = false;
+    }else{
+      contactPlatform = false;
+      inAir = true;
     }
   }
   
