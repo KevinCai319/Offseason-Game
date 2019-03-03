@@ -6,18 +6,20 @@ public class MovableEntity{
   float gravity; // Gravity speed
   float setSideSpeed;
   float setJumpForce;
+  float accelerationRate;
   boolean inAir; // To see if entity is jumping
   boolean contactPlatform; // Used to determine if bottom of entity is on or below platform
   boolean moving; // Currently unused.
   boolean dropping; // Used only for dropping through platforms. Set to true by key input.
   
-  MovableEntity(PVector entityLocation, PVector entityDimensions, float gravity, float setSideSpeed, float setJumpForce){
+  MovableEntity(PVector entityLocation, PVector entityDimensions, float gravity, float setSideSpeed, float setJumpForce, float accelerationRate){
     this.entityLocation = entityLocation;
     this.entityDimensions = entityDimensions;  
     entitySpeed = new PVector(0,0);
     this.gravity = gravity;
     this.setSideSpeed = setSideSpeed;
     this.setJumpForce = setJumpForce;
+    this.accelerationRate = accelerationRate;
   }
   
   // Updates entity position and redraws visual position
@@ -28,63 +30,85 @@ public class MovableEntity{
   
   // Gravity acceleration by adding to speed instead of position. Adjustable.
   public void checkGravity(){
-    if(!contactPlatform) entitySpeed.y += gravity;
+    if(!contactPlatform || inAir) entitySpeed.y += gravity;
   }
   
-  // Activates hitbox of platform if the player has already gone above the platform and is within its x bounds.
-  public void checkPlatformCollision(Platform specificPlatform){
-    boolean abovePlatform = entityLocation.y + entityDimensions.y < specificPlatform.yPosition;
-    boolean inXArea = entityLocation.x + entityDimensions.x > specificPlatform.xLeft && entityLocation.x < specificPlatform.xRight;
+  public float platformCollisionTime(Platform platform){
+    float yInvEntry;
+    float yInvExit;
     
-    // Enables hitbox
-    if(specificPlatform.droppable){
-      if(abovePlatform && inXArea && !dropping) specificPlatform.platformEnabled = true;
+    if(entitySpeed.y > 0){
+       yInvEntry = platform.yPosition - (entityLocation.y + entityDimensions.y);
+       yInvExit = (platform.yPosition + platform.thickness) - entityLocation.y;
     }else{
-      if(abovePlatform && inXArea) specificPlatform.platformEnabled = true;
+      yInvEntry = entitySpeed.y;
+      yInvExit = entitySpeed.y;
     }
     
-    // The actual hitbox
-    if(specificPlatform.platformEnabled){
-      if(!abovePlatform){
-        entityLocation.y = specificPlatform.yPosition - entityDimensions.y;
-        entitySpeed.y = 0;
-        
-        contactPlatform = true;
-        inAir = false;
+    float yEntry;
+    float yExit;
+    
+    if(entitySpeed.y == 0){
+      yEntry = 1;
+      yExit = 1;
+    }else{
+      yEntry = yInvEntry/entitySpeed.y;
+      yExit = yInvExit/entitySpeed.y;
+    }
+    
+    if(yEntry > yExit || yEntry < 0 || yEntry > 1){
+      contactPlatform = false;
+      return 1;
+    }else{
+      contactPlatform = true;
+      return yEntry;
+    }
+  }
+  
+  // Uses sweptAABB
+  public void checkPlatformCollision(Platform specificPlatform){
+    boolean inXArea = entityLocation.x < specificPlatform.xRight && entityLocation.x + entityDimensions.x> specificPlatform.xLeft; 
+    if(specificPlatform.droppable){
+      if(inXArea && !dropping){
+        float collisiontime = platformCollisionTime(specificPlatform);
+        entitySpeed.y *= collisiontime;
+        if(collisiontime == 0){
+          contactPlatform = true;
+          inAir = false;
+        }
       }else{
         contactPlatform = false;
-      }        
-      
-      // Handles dropping from key input. Disables platform hitbox.
-      if(specificPlatform.droppable){
-        if(!inXArea || dropping){
-          specificPlatform.platformEnabled = false;
-          contactPlatform = false;
-          inAir = true;
-        }
-      }else{
-        // Drops player if it leaves the x bounds.
-        if(!inXArea){
-          specificPlatform.platformEnabled = false;
-          contactPlatform = false;
-          inAir = true;
-        }
+        inAir = true;
       }
     }else{
-      contactPlatform = false;
+      if(inXArea){
+        float collisiontime = platformCollisionTime(specificPlatform);
+        entitySpeed.y *= collisiontime;
+        if(collisiontime == 0){
+          contactPlatform = true;
+          inAir = false;
+        }
+      }else{
+        contactPlatform = false;
+        inAir = true;
+      }
     }
   }
   
   public void moveRight(){
-    entitySpeed.x = setSideSpeed;
+    if(entitySpeed.x < setSideSpeed) entitySpeed.x+= accelerationRate;
   }
   
   public void moveLeft(){
-    entitySpeed.x = -setSideSpeed;
+    if(entitySpeed.x > -setSideSpeed) entitySpeed.x-= accelerationRate;
   }
   
   public void stopSideMove(){
-    entitySpeed.x = 0;
+    if(entitySpeed.x < 0){
+      entitySpeed.x+= accelerationRate;
+    }else if(entitySpeed.x > 0){
+      entitySpeed.x-= accelerationRate;
+    }
   }
   
   public void jump(){

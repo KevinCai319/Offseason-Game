@@ -5,17 +5,19 @@ public class Platform{
   float yPosition;
   boolean platformEnabled; // Used for its hitbox in MovableEntity.
   boolean droppable; // Allows dropping to disable the hitbox to fall through
+  float thickness;
   
-  public Platform(float xLeft, float xRight, float yPosition, boolean droppable){
+  public Platform(float xLeft, float xRight, float yPosition, boolean droppable, float thickness){
     this.xLeft = xLeft;
     this.xRight = xRight;
     this.yPosition = yPosition;
     this.droppable = droppable;
     platformEnabled = false; // By default
+    this.thickness = thickness;
   }
   
   public void drawPlatform(){
-    line(xLeft, yPosition, xRight, yPosition);
+    rect(xLeft, yPosition, xRight - xLeft, thickness);
   }
   
 }

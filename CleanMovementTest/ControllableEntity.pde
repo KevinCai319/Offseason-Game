@@ -1,7 +1,7 @@
 public class ControllableEntity extends MovableEntity{
 
-  public ControllableEntity(PVector entityLocation, PVector entityDimensions, float gravity, float setSideSpeed, float setJumpForce){
-    super(entityLocation, entityDimensions, gravity, setSideSpeed, setJumpForce);
+  public ControllableEntity(PVector entityLocation, PVector entityDimensions, float gravity, float setSideSpeed, float setJumpForce, float accelerationRate){
+    super(entityLocation, entityDimensions, gravity, setSideSpeed, setJumpForce, accelerationRate);
   }
   
   // Enables all movement from key presses.
@@ -25,7 +25,7 @@ public class ControllableEntity extends MovableEntity{
   // Sets x speed to 0 if both left and right are pressed, otherwise sets x speed based on which key is pressed.
   public void enableSideMove(){
     if(keys.getState('a') == KeyState.HELD && keys.getState('d') == KeyState.HELD){
-      super.entitySpeed.x = 0;
+      super.stopDrop();
     }else{
       if(keys.getState('a') == KeyState.HELD) super.moveLeft();    
       if(keys.getState('d') == KeyState.HELD) super.moveRight(); 
