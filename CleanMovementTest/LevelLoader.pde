@@ -7,8 +7,8 @@ public class LevelLoader{
   public LevelLoader(){
   }
   
-  public void addPlatform(Platform platform){
-    platforms.add(platform);
+  public void loadLevel(){
+    drawAllPlatforms(platforms);
   }
   
   public void drawAllPlatforms(ArrayList<Platform> platforms){
@@ -20,15 +20,26 @@ public class LevelLoader{
   public void getLevel(String level, String subLevel){
     platforms.clear();
     ArrayList<String> data = new ArrayList<String>(Arrays.asList(loadStrings("..\\LevelData\\" + level + "\\" + subLevel + ".txt"))); 
+    
     for(String platformData: data){
-      println(platformData); 
+      try{
+        if(platformData.length() == 3){
+          platforms.add(new Ground(Float.parseFloat(platformData))); 
+        }else{
+          platforms.add(new Platform(Float.parseFloat(platformData.substring(0, 4)), 
+                                     Float.parseFloat(platformData.substring(5, 9)), 
+                                     Float.parseFloat(platformData.substring(10,14)), 
+                                     Float.parseFloat(platformData.substring(15, 19)), 
+                                     Boolean.parseBoolean(platformData.substring(20, 24))));
+        }
+      }catch(Exception e){
+        println("Error in level data!");
+      }
     } 
   }
   
-  public void checkLevelEntityCollision(MovableEntity specificEntity){
-    for(Platform platform: platforms){
-      specificEntity.checkPlatformCollision(platform);
-    }
+  public void activateCollision(MovableEntity entity){
+    entity.checkAllPlatformCollision(platforms);
   }
   
 }
