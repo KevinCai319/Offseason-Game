@@ -130,8 +130,8 @@ public class MovableEntity{
       xEntry = 1; // Don't calculate if not moving
       xExit = 1;
     } else {
-      xEntry = Math.abs(xInvEntry/entitySpeed.x); // Time = distance/rate
-      xExit = Math.abs(xInvExit/entitySpeed.x);
+      xEntry = xInvEntry/entitySpeed.x; // Time = distance/rate
+      xExit = xInvExit/entitySpeed.x;
     }
     
     if(xEntry > xExit || xEntry < 0 || xEntry > 1) {// Don't calculate if the calculation is beyond a frame or entry face is beyond exit
@@ -145,7 +145,7 @@ public class MovableEntity{
   
   public boolean checkWall(Wall wall){
     float collisiontime = wallCollisionTime(wall);
-    if(collisiontime < 1 && collisiontime >= 0){
+    if(collisiontime < 1){
       return true;
     }else{
       return false;
@@ -155,16 +155,13 @@ public class MovableEntity{
   public void checkAllWallCollision(ArrayList<Wall> walls){
     boolean touchWall = false;
     for(Wall wall: walls){
+      float collisiontime = wallCollisionTime(wall);
+      entitySpeed.x *= collisiontime;
       if(checkWall(wall)){
-        float collisiontime = wallCollisionTime(wall);
         entitySpeed.x *= collisiontime;
         touchWall = true;
+        print(true);
       }
-    }
-    if(touchWall && entityLocation.x < 0){
-      entityLocation.x = 0;
-    }else if(touchWall && entityLocation.x + entityDimensions.x> width){
-      entityLocation.x = width - entityDimensions.x;
     }
   }  
   public void moveRight(){
