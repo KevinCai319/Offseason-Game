@@ -23,8 +23,9 @@ void draw(){
   levelLoader.activateCollision(player);
   
   player.enableMovement();
+  player.checkWalls();
   player.updateCEntity();  
-
+  
 }
 
 void keyPressed(){

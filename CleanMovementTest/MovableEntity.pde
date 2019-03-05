@@ -23,13 +23,13 @@ public class MovableEntity{
   }
   
   // Updates entity position and redraws visual position
-  public void updateCEntity(){
+  public void updateCEntity() {
     entityLocation.add(entitySpeed);
     rect(entityLocation.x, entityLocation.y, entityDimensions.x, entityDimensions.y); 
   }
   
   // Gravity acceleration by adding to speed instead of position. Adjustable.
-  public void checkGravity(){
+  public void checkGravity() {
     if(!contactPlatform || inAir) entitySpeed.y += gravity;
   }
   
@@ -37,29 +37,29 @@ public class MovableEntity{
     float yInvEntry;
     float yInvExit;
     
-    if(entitySpeed.y > 0){
-       yInvEntry = platform.yPosition - (entityLocation.y + entityDimensions.y);
+    if(entitySpeed.y > 0) {
+       yInvEntry = platform.yPosition - (entityLocation.y + entityDimensions.y); // Distance
        yInvExit = (platform.yPosition + platform.thickness) - entityLocation.y;
-    }else{
+    } else {
       yInvEntry = entitySpeed.y;
       yInvExit = entitySpeed.y;
     }
     
-    float yEntry;
+    float yEntry; // Time in frames to enter
     float yExit;
     
-    if(entitySpeed.y == 0){
-      yEntry = 1;
+    if(entitySpeed.y == 0) {
+      yEntry = 1; // Don't calculate if not moving
       yExit = 1;
-    }else{
-      yEntry = yInvEntry/entitySpeed.y;
+    } else {
+      yEntry = yInvEntry/entitySpeed.y; // Time = distance/rate
       yExit = yInvExit/entitySpeed.y;
     }
     
-    if(yEntry > yExit || yEntry < 0 || yEntry > 1){
+    if(yEntry > yExit || yEntry < 0 || yEntry > 1) {// Don't calculate if the calculation is beyond a frame or entry face is beyond exit
       contactPlatform = false;
       return 1;
-    }else{
+    } else {
       contactPlatform = true;
       return yEntry;
     }
@@ -67,24 +67,24 @@ public class MovableEntity{
   
   public boolean checkPlatformCollision(Platform specificPlatform){
     boolean inXArea = entityLocation.x < specificPlatform.xRight && entityLocation.x + entityDimensions.x> specificPlatform.xLeft; 
-    if(specificPlatform.droppable){
-      if((inXArea && !dropping)){
+    if(specificPlatform.droppable) {
+      if((inXArea && !dropping)) {
         float collisiontime = platformCollisionTime(specificPlatform);
         entitySpeed.y *= collisiontime;
-        if(collisiontime == 0){
+        if(collisiontime == 0) {
           return true;
         }
-      }else{
+      } else {
         return false;
       }
-    }else{
+    } else {
       if(inXArea){
         float collisiontime = platformCollisionTime(specificPlatform);
         entitySpeed.y *= collisiontime;
         if(collisiontime == 0){
           return true;
         }
-      }else{
+      } else {
         return false;
       }
     }
@@ -105,6 +105,12 @@ public class MovableEntity{
     }else{
       contactPlatform = false;
       inAir = true;
+    }
+  }
+  
+  public void checkWalls(){
+    if(entityDimensions.x > width + 100 || entityDimensions.x < -100){
+      entityDimensions = new PVector(100,250);
     }
   }
   
