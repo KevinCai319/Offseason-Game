@@ -11,6 +11,7 @@ public class ControllableEntity extends MovableEntity{
     enableDrop();
     checkStopSideMove();
     checkStopDrop();
+    super.checkGravity();
   }
   
   // Sets y speed to negative if the player is not in air and if spacebar is pressed.

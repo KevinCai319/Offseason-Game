@@ -9,7 +9,6 @@ public class MovableEntity{
   float accelerationRate;
   boolean inAir; // To see if entity is jumping
   boolean contactPlatform; // Used to determine if bottom of entity is on or below platform
-  boolean moving; // Currently unused.
   boolean dropping; // Used only for dropping through platforms. Set to true by key input.
   
   MovableEntity(PVector entityLocation, PVector entityDimensions, float gravity, float setSideSpeed, float setJumpForce, float accelerationRate){
@@ -111,10 +110,11 @@ public class MovableEntity{
   public float wallCollisionTime(Wall wall){
     float xInvEntry;
     float xInvExit;
-    
+
     if(entitySpeed.x > 0) {
        xInvEntry = wall.xLeft - (entityLocation.x + entityDimensions.x); // Distance
        xInvExit = wall.xRight - entityLocation.x;
+
     } else if(entitySpeed.x < 0){
        xInvEntry = entityLocation.x - wall.xRight;
        xInvExit = (entityLocation.x + entityDimensions.x) - wall.xLeft;
@@ -122,7 +122,7 @@ public class MovableEntity{
       xInvEntry = entitySpeed.x;
       xInvExit = entitySpeed.x;
     }
-    
+  
     float xEntry; // Time in frames to enter
     float xExit;
     
@@ -130,10 +130,11 @@ public class MovableEntity{
       xEntry = 1; // Don't calculate if not moving
       xExit = 1;
     } else {
-      xEntry = xInvEntry/entitySpeed.x; // Time = distance/rate
-      xExit = xInvExit/entitySpeed.x;
+      xEntry = Math.abs(xInvEntry/entitySpeed.x); // Time = distance/rate
+      xExit = Math.abs(xInvExit/entitySpeed.x);
     }
     
+
     if(xEntry > xExit || xEntry < 0 || xEntry > 1) {// Don't calculate if the calculation is beyond a frame or entry face is beyond exit
       contactPlatform = false;
       return 1;
@@ -141,29 +142,16 @@ public class MovableEntity{
       contactPlatform = true;
       return xEntry;
     }
-  }
-  
-  public boolean checkWall(Wall wall){
-    float collisiontime = wallCollisionTime(wall);
-    if(collisiontime < 1){
-      return true;
-    }else{
-      return false;
-    }
+
   }
   
   public void checkAllWallCollision(ArrayList<Wall> walls){
-    boolean touchWall = false;
     for(Wall wall: walls){
       float collisiontime = wallCollisionTime(wall);
       entitySpeed.x *= collisiontime;
-      if(checkWall(wall)){
-        entitySpeed.x *= collisiontime;
-        touchWall = true;
-        print(true);
-      }
     }
   }  
+  
   public void moveRight(){
     if(entitySpeed.x < setSideSpeed) entitySpeed.x+= accelerationRate;
   }
@@ -174,9 +162,17 @@ public class MovableEntity{
   
   public void stopSideMove(){
     if(entitySpeed.x < 0){
-      entitySpeed.x+= accelerationRate;
+      if(entitySpeed.x > -1){
+        entitySpeed.x += 0 - entitySpeed.x;
+      }else{
+        entitySpeed.x += accelerationRate;
+      }
     }else if(entitySpeed.x > 0){
-      entitySpeed.x-= accelerationRate;
+      if(entitySpeed.x < 1){
+        entitySpeed.x -= entitySpeed.x - 0;
+      }else{
+        entitySpeed.x -= accelerationRate;
+      }
     }
   }
   

@@ -3,12 +3,15 @@ import java.util.*;
 public class LevelLoader{
   
   ArrayList<Platform> platforms = new ArrayList<Platform>();
-  
+  ArrayList<Wall> walls = new ArrayList<Wall>();
+  String left = "none", right = "none", up = "none", down = "none";
+
   public LevelLoader(){
   }
   
   public void loadLevel(){
     drawAllPlatforms(platforms);
+    drawAllWalls(walls);
   }
   
   public void drawAllPlatforms(ArrayList<Platform> platforms){
@@ -17,31 +20,56 @@ public class LevelLoader{
     }
   }
   
+  public void drawAllWalls(ArrayList<Wall> walls){
+    for(Wall wall: walls){
+      wall.drawWall();
+    }
+  }
+  
   public void getLevel(String level, String subLevel){
     platforms.clear();
+    walls.clear();
     ArrayList<String> data = new ArrayList<String>(Arrays.asList(loadStrings("LevelData/" + level + "/" + subLevel + ".txt"))); 
     
-    for(String platformData: data){
+    for(String dataLine: data){
       try{
-        if(platformData.length() == 3){
-          platforms.add(new Ground(Float.parseFloat(platformData))); 
-        }else{
-          ArrayList<String> platformSplit = new ArrayList<String>(Arrays.asList(platformData.split(" ")));
+        ArrayList<String> dataSplit = new ArrayList<String>(Arrays.asList(dataLine.split(" ")));
+        String dataType = dataSplit.get(0);
+        
+        if(dataType.equals("Ground") == true){
+          platforms.add(new Ground(Float.parseFloat(dataSplit.get(1)))); 
+        }else if(dataType.equals("Platform") == true){
+          platforms.add(new Platform(Float.parseFloat(dataSplit.get(1)), 
+                                     Float.parseFloat(dataSplit.get(2)), 
+                                     Float.parseFloat(dataSplit.get(3)), 
+                                     Float.parseFloat(dataSplit.get(4)), 
+                                     Boolean.parseBoolean(dataSplit.get(5))));            
+        }else if(dataType.equals("Wall")){
+          walls.add(new Wall(Float.parseFloat(dataSplit.get(1)),
+                             Float.parseFloat(dataSplit.get(2)),
+                             Float.parseFloat(dataSplit.get(3)),
+                             Float.parseFloat(dataSplit.get(4))));
+        }else if(dataType == "Left"){
           
-          platforms.add(new Platform(Float.parseFloat(platformSplit.get(0)), 
-                                     Float.parseFloat(platformSplit.get(1)), 
-                                     Float.parseFloat(platformSplit.get(2)), 
-                                     Float.parseFloat(platformSplit.get(3)), 
-                                     Boolean.parseBoolean(platformSplit.get(4))));
+        }else if(dataType == "Right"){
+          
+        }else if(dataType == "Up"){
+          
+        }else if(dataType == "Down"){
+          
+        }else{
+          
         }
       }catch(Exception e){
-        println("Error in level data!");
+        println("rip");
       }
-    } 
+    }
+    loadLevel();
   }
   
   public void activateCollision(MovableEntity entity){
     entity.checkAllPlatformCollision(platforms);
+    entity.checkAllWallCollision(walls);
   }
   
 }

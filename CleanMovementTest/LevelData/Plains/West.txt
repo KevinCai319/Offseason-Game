@@ -1,3 +1,5 @@
-400
-0150 0350 0325 0005 true
-0150 0350 0250 0005 true
+Ground 400
+Platform 150 350 325 5 true
+Platform 150 350 250 5 true
+Wall -5 0 0 400
+Wall 1000 1005 0 400 

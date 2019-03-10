@@ -13,7 +13,7 @@ public class Wall{
     platformEnabled = false; // By default
   }
   
-  public void drawPlatform(){
+  public void drawWall(){
     rect(xLeft, yTop, xRight - xLeft, yBottom);
   }
 }
