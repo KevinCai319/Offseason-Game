@@ -6,7 +6,7 @@ void setup(){
   size(1000, 500);
   keys = new KeyListener();
   player = new ControllableEntity(new PVector(width/2, 50), new PVector(25, 60), 0.6472135955, 8.09016994375, 12.94427191, 1.21352549156);
-  levelLoader = new LevelLoader();
+  levelLoader = new LevelLoader("plains", "west");
 }
 
 void draw(){
@@ -16,7 +16,7 @@ void draw(){
   stroke(125);
   
   keys.update();
-  levelLoader.getLevel("Plains", "West");
+  levelLoader.loadLevel();
   player.enableMovement();
   levelLoader.activateCollision(player);
   player.updateCEntity();

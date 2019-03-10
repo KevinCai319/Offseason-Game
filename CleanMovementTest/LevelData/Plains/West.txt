@@ -1,5 +1,4 @@
-Ground 400
-Platform 150 350 325 5 true
-Platform 150 350 250 5 true
-Wall -5 0 0 400
-Wall 1000 1005 0 400 
+Ground 450
+Platform 150 350 375 5 true
+Platform 150 350 300 5 true
+Right plains central
