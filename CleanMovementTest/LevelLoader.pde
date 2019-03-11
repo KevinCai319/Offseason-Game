@@ -43,6 +43,7 @@ public class LevelLoader{
         if(entity.entityLocation.y + entity.entityDimensions.y > groundHeight) {
           entity.entitySpeed.y = 0;
           entity.entityLocation.y = groundHeight - entity.entityDimensions.y;
+          loadLevel();
         }
       }
     }
@@ -58,6 +59,7 @@ public class LevelLoader{
         if(entity.entityLocation.y + entity.entityDimensions.y > groundHeight) {
           entity.entitySpeed.y = 0;
           entity.entityLocation.y = groundHeight - entity.entityDimensions.y;
+          loadLevel();
         }
       }
     }
@@ -65,6 +67,7 @@ public class LevelLoader{
     if(!up.equals("none") && entity.entityLocation.y + entity.entityDimensions.y < 0) {
       level = up;
       subLevel = upSub;
+      loadLevel();
     }
     
     if(down.equals("none")){
@@ -73,6 +76,7 @@ public class LevelLoader{
       if(entity.entityLocation.y > height) {
         level = down;
         subLevel = downSub;
+        loadLevel();
       }
     }
   }
@@ -88,7 +92,7 @@ public class LevelLoader{
     downSub = "none";
     platforms.clear();
     walls.clear();
-    ArrayList<String> data = new ArrayList<String>(Arrays.asList(loadStrings("LevelData/" + level.toLowerCase() + "/" + subLevel.toLowerCase() + ".txt"))); 
+    ArrayList<String> data = new ArrayList<String>(Arrays.asList(loadStrings("LevelData/" + level + "/" + subLevel + ".txt"))); 
     
     for(String dataLine: data){
       try{
@@ -128,8 +132,9 @@ public class LevelLoader{
         println("rip");
       }
     }
-
+    
     drawLevel();
+
   }
   
   public void activateCollision(MovableEntity entity){
