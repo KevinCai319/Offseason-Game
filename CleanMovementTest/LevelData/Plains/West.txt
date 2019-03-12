@@ -1,4 +1,4 @@
 Ground 450
 Platform 150 350 375 5 true
 Platform 150 350 300 5 true
-Right plains central
+Right Plains Central

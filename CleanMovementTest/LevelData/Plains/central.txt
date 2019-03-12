@@ -1,2 +1,2 @@
 Platform 125 375 425 5 true
-Left plains west
+Left Plains West
