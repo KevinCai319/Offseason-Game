@@ -33,8 +33,7 @@ public class MovableEntity{
   }
   
   public float platformCollisionTime(Platform platform){
-    float yInvEntry;
-    float yInvExit;
+    float yInvEntry, yInvExit;
     
     if(entitySpeed.y > 0) {
        yInvEntry = platform.yPosition - (entityLocation.y + entityDimensions.y); // Distance
@@ -44,8 +43,7 @@ public class MovableEntity{
       yInvExit = entitySpeed.y;
     }
     
-    float yEntry; // Time in frames to enter
-    float yExit;
+    float yEntry, yExit;
     
     if(entitySpeed.y == 0) {
       yEntry = 1; // Don't calculate if not moving
@@ -64,40 +62,20 @@ public class MovableEntity{
     }
   }
   
-  public boolean checkPlatformCollision(Platform specificPlatform){
-    boolean inXArea = entityLocation.x < specificPlatform.xRight && entityLocation.x + entityDimensions.x> specificPlatform.xLeft; 
-    if(specificPlatform.droppable) {
-      if((inXArea && !dropping)) {
-        float collisiontime = platformCollisionTime(specificPlatform);
-        entitySpeed.y *= collisiontime;
-        if(collisiontime == 0) {
-          return true;
-        }
-      } else {
-        return false;
-      }
-    } else {
-      if(inXArea){
-        float collisiontime = platformCollisionTime(specificPlatform);
-        entitySpeed.y *= collisiontime;
-        if(collisiontime == 0){
-          return true;
-        }
-      } else {
-        return false;
-      }
-    }
-    return false;
-  }
-  
   // Uses sweptAABB
   public void checkAllPlatformCollision(ArrayList<Platform> platforms){
     boolean touchPlatform = false;
+    
     for(Platform platform: platforms){
-      if(checkPlatformCollision(platform)){
-        touchPlatform = true;
+      boolean inXArea = entityLocation.x < platform.xRight && entityLocation.x + entityDimensions.x> platform.xLeft; 
+      boolean isDrop = platform.droppable && dropping;
+      float collisiontime = platformCollisionTime(platform);
+      if(inXArea && !isDrop){
+        entitySpeed.y *= collisiontime;
+        if(collisiontime == 0) touchPlatform = true;
       }
     }
+    
     if(touchPlatform){
       contactPlatform = true;
       inAir = false;
@@ -108,13 +86,11 @@ public class MovableEntity{
   }
   
   public float wallCollisionTime(Wall wall){
-    float xInvEntry;
-    float xInvExit;
+    float xInvEntry, xInvExit;
 
     if(entitySpeed.x > 0) {
        xInvEntry = wall.xLeft - (entityLocation.x + entityDimensions.x); // Distance
        xInvExit = wall.xRight - entityLocation.x;
-
     } else if(entitySpeed.x < 0){
        xInvEntry = entityLocation.x - wall.xRight;
        xInvExit = (entityLocation.x + entityDimensions.x) - wall.xLeft;
@@ -123,8 +99,7 @@ public class MovableEntity{
       xInvExit = entitySpeed.x;
     }
   
-    float xEntry; // Time in frames to enter
-    float xExit;
+    float xEntry, xExit;
     
     if(entitySpeed.x == 0) {
       xEntry = 1; // Don't calculate if not moving
@@ -133,7 +108,6 @@ public class MovableEntity{
       xEntry = Math.abs(xInvEntry/entitySpeed.x); // Time = distance/rate
       xExit = Math.abs(xInvExit/entitySpeed.x);
     }
-    
 
     if(xEntry > xExit || xEntry < 0 || xEntry > 1) {// Don't calculate if the calculation is beyond a frame or entry face is beyond exit
       contactPlatform = false;

@@ -128,7 +128,6 @@ public class LevelLoader{
         println("rip");
       }
     }
-
     drawLevel();
   }
   
