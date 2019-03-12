@@ -43,7 +43,6 @@ public class LevelLoader{
         if(entity.entityLocation.y + entity.entityDimensions.y > groundHeight) {
           entity.entitySpeed.y = 0;
           entity.entityLocation.y = groundHeight - entity.entityDimensions.y;
-          loadLevel();
         }
       }
     }
@@ -59,7 +58,6 @@ public class LevelLoader{
         if(entity.entityLocation.y + entity.entityDimensions.y > groundHeight) {
           entity.entitySpeed.y = 0;
           entity.entityLocation.y = groundHeight - entity.entityDimensions.y;
-          loadLevel();
         }
       }
     }
@@ -67,7 +65,6 @@ public class LevelLoader{
     if(!up.equals("none") && entity.entityLocation.y + entity.entityDimensions.y < 0) {
       level = up;
       subLevel = upSub;
-      loadLevel();
     }
     
     if(down.equals("none")){
@@ -76,7 +73,6 @@ public class LevelLoader{
       if(entity.entityLocation.y > height) {
         level = down;
         subLevel = downSub;
-        loadLevel();
       }
     }
   }
@@ -132,10 +128,7 @@ public class LevelLoader{
         println("rip");
       }
     }
-<<<<<<< HEAD
-=======
-    
->>>>>>> f533cf5aa597753ee987b8c0f6232c90a286e8a8
+
     drawLevel();
 
   }
